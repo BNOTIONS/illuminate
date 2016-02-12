@@ -7,5 +7,5 @@ def sendMessageToMatrix(message):
     device.show_message(message)
 
 import socket
-ip = socket.gethostbyname(socket.gethostname())
+ip = socket.gethostbyname(socket.getfqdn())
 sendMessageToMatrix(ip)
