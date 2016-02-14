@@ -7,4 +7,4 @@ device.orientation(270, redraw=True)
 def sendMessageToMatrix(message):
     device.show_message(message, font=font.LCD_FONT)
 
-sendMessageToMatrix("Server Booting...")
+sendMessageToMatrix("Boot")
