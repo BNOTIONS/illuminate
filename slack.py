@@ -4,9 +4,11 @@ import ledMatrix
 import websocket
 from threading import Thread
 from Queue import Queue
+import json
 
 token = "XXX"      # found at https://api.slack.com/web#authentication
 sc = SlackClient(token)
+userTable = {}
 queue = Queue(10)
 
 class ProducerThread(Thread):
@@ -18,9 +20,11 @@ class ProducerThread(Thread):
                     message = sc.rtm_read()
                     print message
                     if message != [] and 'text' in message[0]:
+                        user = userTable[message[0]['user']]
                         text = message[0]['text']
-                        queue.put(text)
-                        print "Added to queue:", text
+                        message = '{0}: {1}'.format(user, text)
+                        queue.put(message)
+                        print "Added to queue:", message
                     time.sleep(1)
             else:
                 raise Exception
@@ -30,12 +34,21 @@ class ConsumerThread(Thread):
         global queue
         while True:
            if not queue.empty():
-                text = queue.get()
-                ledMatrix.sendMessageToMatrix(text)
+                message = queue.get()
+                ledMatrix.sendMessageToMatrix(message)
                 queue.task_done()
-                print "Queue Consumed:", text
+                print "Queue Consumed:", message
                 time.sleep(2)
 
+def buildUserTable():
+    usersJson = json.loads(sc.api_call("users.list"))['members']
+    for user in usersJson:
+        try:
+            userTable[user['id']] = user['profile']['first_name']
+        except:
+            pass
+
+buildUserTable()
 
 producer = ProducerThread()
 producer.daemon = True
