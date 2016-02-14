@@ -9,7 +9,7 @@ import json
 token = "XXX"      # found at https://api.slack.com/web#authentication
 sc = SlackClient(token)
 userTable = {}
-queue = Queue(10)
+queue = Queue(100)
 
 class ProducerThread(Thread):
     def run(self):
