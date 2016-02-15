@@ -1,6 +1,7 @@
 import time
 from slackclient import SlackClient
 import ledMatrix
+import unicodedata
 import websocket
 from threading import Thread
 from Queue import Queue
@@ -22,6 +23,7 @@ class ProducerThread(Thread):
                     if message != [] and 'text' in message[0]:
                         user = userTable[message[0]['user']]
                         text = message[0]['text']
+                        text = unicodedata.normalize('NFKD', text).encode('ascii','ignore')
                         message = '{0}: {1}'.format(user, text)
                         queue.put(message)
                         print "Added to queue:", message
