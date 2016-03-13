@@ -21,7 +21,7 @@ class ProducerThread(Thread):
                 while True:
                     raw_message = SLACK_CLIENT.rtm_read()
                     print raw_message
-                    get_active_users()
+                    # get_active_users()
                     clean_message = parse_message(raw_message)
                     if 'text' in clean_message:
                         queue.put(clean_message)
@@ -33,6 +33,7 @@ class ProducerThread(Thread):
 class ConsumerThread(Thread):
     def run(self):
         global queue
+        seconds_been_empty = 0
         while True:
             print ("run consumer")
             if not queue.empty():
@@ -49,7 +50,18 @@ class ConsumerThread(Thread):
                     if row_counter == 3:
                         break
                 runTileScroller(tiles)
+                seconds_been_empty = 0
                 print "Queue Consumed:", message
+            else:
+                # Screen saver :)
+                seconds_been_empty += 1
+                if seconds_been_empty > 3:
+                    tile1 = tile("Slack", "#General", row=0, highlight_color=illuminate.WHITE, label_color=illuminate.BLUE)
+                    tile2 = tile("#General", "#General", row=1, highlight_color=illuminate.YELLOW, label_color=illuminate.RED, column_spacing=100)
+                    tile3 = tile("Hack this on", "Github", row=2, highlight_color=illuminate.WHITE, label_color=illuminate.GREEN, column_spacing=150)
+                    tiles = [tile1, tile2, tile3]
+                    runTileScroller(tiles)
+                    seconds_been_empty = 0
             time.sleep(1)
 
 class BottomRowThread(Thread):
@@ -57,8 +69,10 @@ class BottomRowThread(Thread):
         while True:
             print ("run bottom")
             tiles = []
-            active_user_tile = tile(str(get_active_users()), "active users on slack", row=3)
-            tilehell = tile(str(0.25), " SY TSX:V", row=3, column_spacing=200)
+            active_users = get_active_users()
+            active_user_list = ', '.join(active_users)
+            active_user_tile = tile(str(len(active_users)), "active users on slack: " + active_user_list, row=3)
+            tilehell = tile(str(0.25), " SY TSX:V", row=3, column_spacing=active_user_tile.width + 100)
             tiles.append(active_user_tile)
             tiles.append(tilehell)
             runTileScroller(tiles)
@@ -86,11 +100,11 @@ def parse_message(raw_message):
     return clean_message
 
 def get_active_users():
-    active_users = 0
+    active_users = []
     for user in userTable:
         if 'presence' in userTable[user] and userTable[user]['presence'] == 'active' and not userTable[user]['is_bot']:
-            active_users += 1
-    print "Active users:", active_users
+            active_users.append(userTable[user]['name'])
+    print "Active users:", len(active_users)
     return active_users
 
 def build_user_table():

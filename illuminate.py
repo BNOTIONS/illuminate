@@ -1,6 +1,3 @@
-# NextBus scrolling marquee display for Adafruit RGB LED matrix (64x32).
-# Requires rgbmatrix.so library: github.com/adafruit/rpi-rgb-led-matrix
-
 import atexit
 from PIL import Image, ImageDraw, ImageFont
 import math
@@ -16,11 +13,11 @@ fps            = 22  # Scrolling speed (ish)
 
 WHITE     = (255, 255, 255) # Color for route labels (usu. numbers)
 descColor      = (110, 110, 110) # " for route direction/description
-GREEN  = (  0, 255,   0) # Ample arrival time = green
-YELLOW   = (255, 255,   0) # Medium arrival time = yellow
-RED = (255,   0,   0) # Short arrival time = red
+GREEN  = (  0, 255,   0)
+YELLOW   = (255, 255,   0)
+RED = (255,   0,   0)
 minsColor      = (110, 110, 110) # Commans and 'minutes' labels
-BLUE   = (  0,   0, 255) # No predictions = blue
+BLUE   = (  0,   0, 255)
 
 # TrueType fonts are a bit too much for the Pi to handle -- slow updates and
 # it's hard to get them looking good at small sizes.  A small bitmap version
@@ -56,13 +53,11 @@ class tile:
     def draw(self):
         draw.rectangle((0, self.y, width, self.y + 8), fill=(0, 0, 0)) # Clear background
         x     = self.x
-        label = self.highlight
-        draw.text((x, self.y + fontYoffset), label, font=font,
-          fill=self.highlight_color)
-        x    += font.getsize(label)[0]
-        label = self.label       # Route direction/desc
-        draw.text((x + 2, self.y + fontYoffset), label, font=font,
-          fill=self.label_color)
+        highlight_text = self.highlight
+        draw.text((x, self.y + fontYoffset), highlight_text, font=font, fill=self.highlight_color)
+        x    += font.getsize(highlight_text)[0]
+        label_text = self.label
+        draw.text((x + 2, self.y + fontYoffset), label_text, font=font, fill=self.label_color)
         x     = self.x
 
 
