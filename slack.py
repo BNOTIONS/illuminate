@@ -44,7 +44,7 @@ class SlackConsumerThread(Thread):
                 row_counter = 0
                 while not queue.empty():
                     message = queue.get()
-                    loadsbel_color = message.get('label_color', illuminate.WHITE)
+                    label_color = message.get('label_color', illuminate.WHITE)
                     highlight_color = message.get('highlight_color', illuminate.GREEN)
                     message_tile = tile(message['username'], message['text'], row=row_counter, label_color=label_color, highlight_color=highlight_color)
                     tiles.append(message_tile)
