@@ -25,5 +25,7 @@ This project is based off of the Adafruit NextBus transit clock (found here: htt
 ## Software Installation
 
 1. Clone this repo
-2. Create your slack bot, and add the user token to `SLACK_TOKEN` in the slack.py file
-3. Run `sudo python slack.py` on the Raspberry Pi
+2. Create your slack bot on the [slack admin panel](https://bnotions.slack.com/apps/new/A0F7YS25R-bots) and copy the API Token to your clipboard.
+3. Add the API token to `SLACK_TOKEN` in the slack.py file
+4. Run `sudo python slack.py` on the Raspberry Pi
+5. Add your bot to any channels you want it listening on, and watch the LED matrix panels display the activity!
