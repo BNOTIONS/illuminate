@@ -52,15 +52,11 @@ class tile:
 
     def draw(self):
         draw.rectangle((0, self.y, width, self.y + 8), fill=(0, 0, 0)) # Clear background
-        x     = self.x
         highlight_text = self.highlight
-        draw.text((x, self.y + fontYoffset), highlight_text, font=font, fill=self.highlight_color)
-        x    += font.getsize(highlight_text)[0]
+        draw.text((self.x, self.y + fontYoffset), highlight_text, font=font, fill=self.highlight_color)
+        label_x = self.x + font.getsize(highlight_text)[0] + 2
         label_text = self.label
-        draw.text((x + 2, self.y + fontYoffset), label_text, font=font, fill=self.label_color)
-        x     = self.x
-
-
+        draw.text((label_x, self.y + fontYoffset), label_text, font=font, fill=self.label_color)
 
 def runTileScroller(tileList):
     tilesAcross = len(tileList)
