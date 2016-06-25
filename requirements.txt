@@ -1,4 +1,4 @@
 simplejson==3.7.3
 requests==2.7.0
 Pillow==3.1.1
-slackclient==0.16
+slackclient==1.0.0
